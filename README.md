@@ -1,2 +1,2 @@
-# yolo-pose-estimator
-YOLO Pose-Estimator for ML course in MFT
+# A Pose Estimator based on YOLO and Ultralytics
+This repository hosts a Pose Estimator project developed using YOLO (You Only Look Once) and the Ultralytics framework, designed as part of a Machine Learning course at MFT. The project focuses on accurately detecting and estimating human poses in real-time by leveraging the power of YOLO's object detection capabilities combined with advanced pose estimation techniques.

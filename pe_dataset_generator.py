@@ -69,11 +69,27 @@ def calculate_distance(A, B):
         math.sqrt((int(B[0]) - int(A[0])) ** 2 + (int(B[1]) - int(A[1])) ** 2), 2
     )
 
+columns_name = []
+
+for i in range(17):
+    columns_name.append(f"kp_{i}_x")
+    columns_name.append(f"kp_{i}_y")
+
+for angle_col in SKELETON_ANGLE.keys():
+    columns_name.append(f"{angle_col}_angle")
+
+for distance_col in SKELETON_DISTANCE.keys():
+    columns_name.append(f"{distance_col}_distance")
+
+columns_name.append('class')
+
 
 images_directory = Path("images")
 
 with open("dataset/dataset.csv", "w", newline="") as file:
     csv_writer = csv.writer(file)
+
+    csv_writer.writerow(columns_name)
 
     for image_path in images_directory.iterdir():
         if image_path.is_file():

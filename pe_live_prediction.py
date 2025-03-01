@@ -3,11 +3,13 @@ import joblib
 
 import numpy as np
 from ultralytics import YOLO
+from skeletons.skeletons import SKELETON_DISTANCE, SKELETON_ANGLE
 import cv2 as cv
 
 model = YOLO("models/yolo11n-pose.pt")
 knn_model = joblib.load("models/best_knn.joblib")
 capture = cv.VideoCapture(0)
+
 SKELETON_LINE = [
     (0, 1),
     (0, 2),
@@ -26,22 +28,6 @@ SKELETON_LINE = [
     (12, 14),
     (14, 16),
 ]
-SKELETON_ANGLE = {
-    "left_shoulder": [11, 5, 7],
-    "right_shoulder": [8, 6, 12],
-    "left_elbow": [5, 7, 9],
-    "right_elbow": [6, 8, 10],
-    "left_hip": [5, 11, 13],
-    "right_hip": [6, 12, 14],
-    "left_knee": [11, 13, 15],
-    "right_knee": [12, 14, 16],
-}
-SKELETON_DISTANCE = {
-    "left_hip_to_ankle": [11, 15],
-    "right_hip_to_ankle": [12, 16],
-    "left_shoulder_to_knee": [5, 13],
-    "right_shoulder_to_knee": [6, 14],
-}
 
 KEY_POINT_COLOR = (0, 255, 0)
 CONNECTION_COLOR = (0, 0, 255)
@@ -113,15 +99,24 @@ while True:
             kp_distance = calculate_distance(kp1, kp2)
             X_record.append(kp_distance)
 
-        X_record = np.array(X_record).reshape(1, -1)
+        X_record = np.array(X_record[10:]).reshape(1, -1)
         pe_predict = knn_model.predict(X_record)
 
-        # Replace with webcam live label
-        print(
-            "Pose Estimator Result is: ",
-            "Standing" if int(pe_predict[0]) else "Sitting",
-        )
-        # #######
+        result = "Standing" if int(pe_predict[0]) else "Sitting"
+        text = str(result)
+
+        x = int(person[0][0])
+        y = int(person[0][1])
+
+        offset = 50
+
+        position = (int(x - offset), int(y - offset))
+        font = cv.FONT_HERSHEY_SIMPLEX
+        font_scale = 1
+        color = (0, 255, 0)
+        thickness = 2
+
+        cv.putText(live_img, text, position, font, font_scale, color, thickness)
 
     cv.imshow("Live", live_img)
     if cv.waitKey(1) == 13:

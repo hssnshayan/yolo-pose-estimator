@@ -4,6 +4,7 @@ import csv
 
 import numpy as np
 from ultralytics import YOLO
+from skeletons.skeletons import SKELETON_DISTANCE, SKELETON_ANGLE
 import cv2 as cv
 
 model = YOLO("models/yolo11n-pose.pt")
@@ -25,22 +26,6 @@ SKELETON_LINE = [
     (12, 14),
     (14, 16),
 ]
-SKELETON_ANGLE = {
-    "left_shoulder": [11, 5, 7],
-    "right_shoulder": [8, 6, 12],
-    "left_elbow": [5, 7, 9],
-    "right_elbow": [6, 8, 10],
-    "left_hip": [5, 11, 13],
-    "right_hip": [6, 12, 14],
-    "left_knee": [11, 13, 15],
-    "right_knee": [12, 14, 16],
-}
-SKELETON_DISTANCE = {
-    "left_hip_to_ankle": [11, 15],
-    "right_hip_to_ankle": [12, 16],
-    "left_shoulder_to_knee": [5, 13],
-    "right_shoulder_to_knee": [6, 14],
-}
 
 KEY_POINT_COLOR = (0, 255, 0)
 CONNECTION_COLOR = (0, 0, 255)
@@ -60,7 +45,6 @@ def calculate_angle(A, B, C):
     angle_degrees = round(math.degrees(angle_radians), 2)
 
     return angle_degrees
-
 
 def calculate_distance(A, B):
     A = A.tolist()
